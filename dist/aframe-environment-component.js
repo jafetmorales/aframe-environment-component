@@ -61,40 +61,43 @@
 
 	//replaced by jafet by the line below it
 	AFRAME.registerComponent('environment', {
-	// AFRAME.registerSystem('environment', {
+	  // AFRAME.registerSystem('environment', {
 	  schema: {
+	    category: { type: 'string', default: 'ground' },
+	    // initialized: { type: 'boolean', default: false },
 	    active: { default: false },
 	    preset: { default: 'default', oneOf: ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'goldmine', 'arches', 'threetowers', 'poison', 'tron', 'japan', 'dream', 'volcano', 'starry', 'osiris'] },
 	    seed: { type: 'int', default: 1, min: 0, max: 1000 },
 
-	    skyType: { default: 'color', oneOf: ['none', 'color', 'gradient', 'atmosphere'] },
-	    skyColor: { type: 'color' },
-	    horizonColor: { type: 'color' },
-	    lighting: { default: 'distant', oneOf: ['none', 'distant', 'point'] },
+	    // skyType: { default: 'color', oneOf: ['none', 'color', 'gradient', 'atmosphere'] },
+	    // skyColor: { type: 'color' },
+	    // horizonColor: { type: 'color' },
+	    // lighting: { default: 'distant', oneOf: ['none', 'distant', 'point'] },
+	    // lightPosition: { type: 'vec3', default: { x: 0, y: 1, z: -0.2 } },
+	    // fog: { type: 'float', default: 0, min: 0, max: 1 },
+
 	    shadow: { default: false },
 	    shadowSize: { default: 10 },
-	    lightPosition: { type: 'vec3', default: { x: 0, y: 1, z: -0.2 } },
-	    fog: { type: 'float', default: 0, min: 0, max: 1 },
 
 	    flatShading: { default: false },
 	    playArea: { type: 'float', default: 1, min: 0.5, max: 10 },
 
-	    ground: { default: 'hills', oneOf: ['none', 'flat', 'hills', 'canyon', 'spikes', 'noise'] },
-	    groundYScale: { type: 'float', default: 3, min: 0, max: 50 },
-	    groundTexture: { default: 'none', oneOf: ['none', 'checkerboard', 'squares', 'walkernoise'] },
-	    groundColor: { type: 'color', default: '#553e35' },
-	    groundColor2: { type: 'color', default: '#694439' },
+	    // ground: { default: 'hills', oneOf: ['none', 'flat', 'hills', 'canyon', 'spikes', 'noise'] },
+	    // groundYScale: { type: 'float', default: 3, min: 0, max: 50 },
+	    // groundTexture: { default: 'none', oneOf: ['none', 'checkerboard', 'squares', 'walkernoise'] },
+	    // groundColor: { type: 'color', default: '#553e35' },
+	    // groundColor2: { type: 'color', default: '#694439' },
 
-	    dressing: { default: 'none', oneOf: ['none', 'cubes', 'pyramids', 'cylinders', 'hexagons', 'stones', 'trees', 'mushrooms', 'towers', 'apparatus', 'arches', 'torii'] },
-	    dressingAmount: { type: 'int', default: 10, min: 0, max: 1000 },
-	    dressingColor: { type: 'color', default: '#795449' },
-	    dressingScale: { type: 'float', default: 5, min: 0, max: 100 },
-	    dressingVariance: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
-	    dressingUniformScale: { default: true },
-	    dressingOnPlayArea: { type: 'float', default: 0, min: 0, max: 1 },
+	    // dressing: { default: 'none', oneOf: ['none', 'cubes', 'pyramids', 'cylinders', 'hexagons', 'stones', 'trees', 'mushrooms', 'towers', 'apparatus', 'arches', 'torii'] },
+	    // dressingAmount: { type: 'int', default: 10, min: 0, max: 1000 },
+	    // dressingColor: { type: 'color', default: '#795449' },
+	    // dressingScale: { type: 'float', default: 5, min: 0, max: 100 },
+	    // dressingVariance: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
+	    // dressingUniformScale: { default: true },
+	    // dressingOnPlayArea: { type: 'float', default: 0, min: 0, max: 1 },
 
-	    grid: { default: 'none', oneOf: ['none', '1x1', '2x2', 'crosses', 'dots', 'xlines', 'ylines'] },
-	    gridColor: { type: 'color', default: '#ccc' }
+	    // grid: { default: 'none', oneOf: ['none', '1x1', '2x2', 'crosses', 'dots', 'xlines', 'ylines'] },
+	    // gridColor: { type: 'color', default: '#ccc' }
 	  },
 
 	  multiple: false,
@@ -197,19 +200,98 @@
 	    // save current scene fog
 	    this.userFog = this.el.sceneEl.getAttribute('fog');
 
+
+	    // this.el.setAttribute('click-drag', '');
+	    // // this.ground.setAttribute('scale','.3 .3 .3');
+	    // this.el.setAttribute('editor-toggler', 'true');
+	    // // this.ground.setAttribute('editable','');
+	    // this.el.setAttribute('tensor', '');
+
+	    // this.ground.classList.add('sky');
+	    // this.el.classList.add('clickable');
+
+	    // this.el.setAttribute('id', this.data.category)//should be replaced with random id so you can have more than one of the same type
+
+
+	    //THIS CODE IS UNNECESSARY AND USES UNNECESSARY MEMORY AND PROCESSING
+	    //IT IS HERE RIGHT NOW ONLY BECAUSE OTHER FUNCTIONS MAKE USE OF THESE ELEMENTS
+	    //YOU CAN FIX THIS BY ADDING A CASE IN THOSE OTHER FUNCTIONS AS WELL
+	    this.sky = document.createElement('a-entity');
+	    this.ground = document.createElement('a-entity');
+	    this.dressing = document.createElement('a-entity');
+	    this.hemilight = document.createElement('a-entity');
+	    this.sunlight = document.createElement('a-entity');
+
+	    switch (this.data.category) {
+	      case 'sky':
+	        // code block
+	        this.sky = this.el //document.createElement('a-entity');
+
+	        this.sky.setAttribute('radius', this.STAGE_SIZE);
+	        this.sky.setAttribute('theta-length', 110);
+
+	        // this.el.sceneEl.appendChild(this.sky);
+
+	        // this.el=this.sky
+	        // this.sky.classList.add('sky');
+	        break;
+	      case 'ground':
+	        // code block
+	        this.ground = this.el //document.createElement('a-entity');
+	        // this.ground.setAttribute('id', 'floor')
+
+	        this.ground.setAttribute('rotation', '-90 0 0');
+	        // this.el.classList.add('clickable');
+	        break;
+	      case 'dressing':
+	        // code block
+	        this.dressing = this.el //document.createElement('a-entity');
+	        // this.el.classList.add('clickable');
+
+	        break;
+	      case 'hemilight':
+	        // code block
+	        this.hemilight = this.el //document.createElement('a-entity');
+
+	        this.hemilight.setAttribute('position', '0 50 0');
+	        this.hemilight.setAttribute('light', {
+	          type: 'hemisphere',
+	          color: '#CEE4F0',
+	          intensity: 0.4
+	        });
+	        // this.el.classList.add('clickable');
+
+	        break;
+	      case 'sunlight':
+	        // code block
+	        this.sunlight = this.el //document.createElement('a-entity');
+
+	        this.sunlight.setAttribute('position', this.data.lightPosition);
+	        this.sunlight.setAttribute('light', { intensity: 0.6 });
+	        // this.el.classList.add('clickable');
+
+	        break;
+	      default:
+	        // code block
+	        this.ground = this.el //document.createElement('a-entity');
+	        // this.ground.setAttribute('id', 'floor')
+	        this.ground.setAttribute('rotation', '-90 0 0');
+	        // this.el.classList.add('clickable');
+	    }
+
 	    // create sky
-	    this.sky = document.createElement('a-sky');
-	    this.sky.setAttribute('radius', this.STAGE_SIZE);
-	    this.sky.setAttribute('theta-length', 110);
-	    this.sky.classList.add('environment');
+	    // this.sky = document.createElement('a-sky');
+	    // this.sky.setAttribute('radius', this.STAGE_SIZE);
+	    // this.sky.setAttribute('theta-length', 110);
+	    // this.sky.classList.add('environment');
 
 	    // stars are created when needed
 	    this.stars = null;
 
 	    // create ground
 	    this.groundMaterial = null;
-	    this.ground = this.el//document.createElement('a-entity');
-	    this.ground.setAttribute('rotation', '-90 0 0');
+	    // this.ground = this.el//document.createElement('a-entity');
+	    // this.ground.setAttribute('rotation', '-90 0 0');
 	    // this.ground.classList.add('environmentGround');
 	    // this.ground.classList.add('environment');
 	    this.groundCanvas = null;
@@ -217,47 +299,120 @@
 	    this.groundMaterial = null;
 	    this.groundGeometry = null;
 	    //these lines added by jafet
-	    this.ground.setAttribute('id', 'floor')
-	    this.ground.setAttribute('click-drag','');
-	    // this.ground.setAttribute('scale','.3 .3 .3');
-	    this.ground.setAttribute('editor-toggler','true');
-	    // this.ground.setAttribute('editable','');
-	    this.ground.setAttribute('tensor','');
-	    // this.ground.classList.add('sky');
-	    this.ground.classList.add('clickable');
+	    // this.ground.setAttribute('id', 'floor')
+	    // this.ground.setAttribute('click-drag','');
+	    // // this.ground.setAttribute('scale','.3 .3 .3');
+	    // this.ground.setAttribute('editor-toggler','true');
+	    // // this.ground.setAttribute('editable','');
+	    // this.ground.setAttribute('tensor','');
+	    // // this.ground.classList.add('sky');
+	    // this.ground.classList.add('clickable');
 	    ///////
 
-	    this.dressing = document.createElement('a-entity');
-	    this.dressing.classList.add('environmentDressing');
-	    this.dressing.classList.add('environment');
+	    // this.dressing = document.createElement('a-entity');
+	    // this.dressing.classList.add('environmentDressing');
+	    // this.dressing.classList.add('environment');
 
 	    this.gridCanvas = null;
 	    this.gridTexture = null;
 
 	    // create lights (one ambient hemisphere light, and one directional for the sun)
-	    this.hemilight = document.createElement('a-entity');
-	    this.hemilight.classList.add('environment');
-	    this.hemilight.setAttribute('position', '0 50 0');
-	    this.hemilight.setAttribute('light', {
-	      type: 'hemisphere',
-	      color: '#CEE4F0',
-	      intensity: 0.4
-	    });
-	    this.sunlight = document.createElement('a-entity');
-	    this.sunlight.classList.add('environment');
-	    this.sunlight.setAttribute('position', this.data.lightPosition);
-	    this.sunlight.setAttribute('light', { intensity: 0.6 });
+	    // this.hemilight = document.createElement('a-entity');
+	    // this.hemilight.classList.add('environment');
+	    // this.hemilight.setAttribute('position', '0 50 0');
+	    // this.hemilight.setAttribute('light', {
+	    //   type: 'hemisphere',
+	    //   color: '#CEE4F0',
+	    //   intensity: 0.4
+	    // });
+	    // this.sunlight = document.createElement('a-entity');
+	    // this.sunlight.classList.add('environment');
+	    // this.sunlight.setAttribute('position', this.data.lightPosition);
+	    // this.sunlight.setAttribute('light', { intensity: 0.6 });
 
-	    // add everything to the scene
-	    this.el.appendChild(this.hemilight);
-	    this.el.appendChild(this.sunlight);
-	    //replaced by the line below it by jafet
-	    // this.el.appendChild(this.ground);
-	    // this.el.sceneEl.appendChild(this.ground);//this is the one that worked
-	    this.el.appendChild(this.dressing);
-	    this.el.appendChild(this.sky);
+	    // //hemilight, sunlight, ground, dressing, sky
+	    //     // add everything to the scene
+	    // this.el.appendChild(this.hemilight);
+	    // this.el.appendChild(this.sunlight);
+	    //     //replaced by the line below it by jafet
+	    //     // this.el.appendChild(this.ground);
+	    //     // this.el.sceneEl.appendChild(this.ground);//this is the one that worked
+	    // this.el.appendChild(this.dressing);
+	    // this.el.appendChild(this.sky);
+
+	    // this.data.initialized=true
+
+	    this.update()
 	  },
 
+	  updateSchema: function(newData) {
+
+	    // if (newData.primitive !== this.data.primitive) {
+	    //   this.extendSchema(GEOMETRIES[newData.primitive].schema);
+	    // }
+	    // ground: { default: 'hills', oneOf: ['none', 'flat', 'hills', 'canyon', 'spikes', 'noise'] },
+	    // groundYScale: { type: 'float', default: 3, min: 0, max: 50 },
+	    // groundTexture: { default: 'none', oneOf: ['none', 'checkerboard', 'squares', 'walkernoise'] },
+	    // groundColor: { type: 'color', default: '#553e35' },
+	    // groundColor2: { type: 'color', default: '#694439' },
+
+	    // dressing: { default: 'none', oneOf: ['none', 'cubes', 'pyramids', 'cylinders', 'hexagons', 'stones', 'trees', 'mushrooms', 'towers', 'apparatus', 'arches', 'torii'] },
+	    //   dressingAmount: { type: 'int', default: 10, min: 0, max: 1000 },
+	    //   dressingColor: { type: 'color', default: '#795449' },
+	    //   dressingScale: { type: 'float', default: 5, min: 0, max: 100 },
+	    //   dressingVariance: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
+	    //   dressingUniformScale: { default: true },
+	    //   dressingOnPlayArea: { type: 'float', default: 0, min: 0, max: 1 },
+
+	    console.log('bro data and newdata are:')
+	    console.log(this)
+	    console.log(newData)
+
+	    switch (newData.category) {
+	      case 'sky':
+	        this.extendSchema({
+	          skyType: { default: 'color', oneOf: ['none', 'color', 'gradient', 'atmosphere'] },
+	          skyColor: { type: 'color' },
+	          lighting: { default: 'distant', oneOf: ['none', 'distant', 'point'] },
+	          lightPosition: { type: 'vec3', default: { x: 0, y: 1, z: -0.2 } },
+	        });
+	        break;
+	      case 'ground':
+	        this.extendSchema({
+	          ground: { default: 'hills', oneOf: ['none', 'flat', 'hills', 'canyon', 'spikes', 'noise'] },
+	          groundYScale: { type: 'float', default: 3, min: 0, max: 50 },
+	          groundTexture: { default: 'none', oneOf: ['none', 'checkerboard', 'squares', 'walkernoise'] },
+	          groundColor: { type: 'color', default: '#553e35' },
+	          groundColor2: { type: 'color', default: '#694439' },
+
+	          grid: { default: 'none', oneOf: ['none', '1x1', '2x2', 'crosses', 'dots', 'xlines', 'ylines'] },
+	          gridColor: { type: 'color', default: '#ccc' },
+
+	          horizonColor: { type: 'color' },
+	          fog: { type: 'float', default: 0, min: 0, max: 1 }
+	        });
+	        break;
+	      case 'dressing':
+	        this.extendSchema({
+	          dressing: { default: 'none', oneOf: ['none', 'cubes', 'pyramids', 'cylinders', 'hexagons', 'stones', 'trees', 'mushrooms', 'towers', 'apparatus', 'arches', 'torii'] },
+	          dressingAmount: { type: 'int', default: 10, min: 0, max: 1000 },
+	          dressingColor: { type: 'color', default: '#795449' },
+	          dressingScale: { type: 'float', default: 5, min: 0, max: 100 },
+	          dressingVariance: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
+	          dressingUniformScale: { default: true },
+	          dressingOnPlayArea: { type: 'float', default: 0, min: 0, max: 1 }
+	        });
+	        break;
+	      case 'hemilight':
+	        break;
+	      case 'sunlight':
+	        break;
+	      default:
+	    }
+
+
+
+	  },
 	  // returns a fog color from a specific sky type and sun height
 	  getFogColor: function(skyType, sunHeight) {
 
@@ -296,14 +451,14 @@
 	  },
 
 	  update: function(oldData) {
+	    //by jafet
 	    // preset changed
 	    if (!oldData || (oldData.preset === undefined || oldData.preset !== this.data.preset)) {
 	      var newData = Object.assign({}, this.presets[this.data.preset]);
 	      if (!oldData || oldData.preset === undefined) {
-	        //replaced by jafet by the line below it
 	        Object.assign(newData, this.el.components.environment.attrValue);
-	        // Object.assign(newData, this.el.systems.environment.attrValue);
 	      }
+	      //this line below was deactivated by jafet because it was causing a mess
 	      this.el.setAttribute('environment', newData);
 	      if (oldData) { return; }
 	      else { oldData = {}; }
@@ -422,6 +577,7 @@
 	      this.updateDressing();
 	    }
 
+	    //commented out by jafet briefly
 	    this.sky.setAttribute('visible', skyType !== 'none');
 
 	    this.el.setAttribute('visible', this.data.active);
@@ -436,6 +592,7 @@
 
 	    // dump current component settings to console
 	    this.dumpParametersDiff();
+
 	  },
 
 	  // logs current parameters to console, for saving to a preset
